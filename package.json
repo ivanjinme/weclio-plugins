@@ -1,6 +1,6 @@
 {
   "name": "@weclio/pi-web-search",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pi extension that enables native web search for supported OpenAI APIs.",
   "files": [
     "extensions/pi-web-search",
@@ -8,7 +8,9 @@
     "LICENSE"
   ],
   "pi": {
-    "extensions": ["./extensions/pi-web-search"]
+    "extensions": [
+      "./extensions/pi-web-search"
+    ]
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
