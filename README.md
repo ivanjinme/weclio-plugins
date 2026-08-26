@@ -22,3 +22,14 @@ Then reload an active session with `/reload`.
 ## Development
 
 The extension entry point is `extensions/pi-web-search/index.ts`.
+
+## Release
+
+Publishing is automated through GitHub Actions and an npm Trusted Publisher. To release a new version, update `package.json`, commit it, then create and push a matching version tag:
+
+```bash
+git tag v0.1.1
+git push origin v0.1.1
+```
+
+The `v0.1.1` tag must match the `version` in `package.json`.
