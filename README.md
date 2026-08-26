@@ -1,14 +1,24 @@
-# weclio-plugins
+# @weclio/pi-web-search
 
-Shared source repository for Weclio Pi extensions and skills.
+A [Pi](https://github.com/earendil-works/pi-mono) extension that enables native web search for supported OpenAI Responses APIs.
 
-```text
-extensions/  # Pi extensions
-skills/      # Pi skills (`<name>/SKILL.md`)
+## Install
+
+Install into a Pi project:
+
+```bash
+pi install -l npm:@weclio/pi-web-search
 ```
 
-This repository is source-only: creating it does not register or load its resources in Pi. Projects can later opt in through a project-local package configuration, Git source, or npm package.
+Then reload an active session with `/reload`.
 
-## Included resources
+## Behavior
 
-- `extensions/pi-web-search` — enables native web search for supported OpenAI APIs.
+- Adds the native `{ type: "web_search" }` tool to supported OpenAI Responses requests.
+- Adds web-search guidance to the system prompt when the extension is active.
+- Removes OpenAI UTM query parameters from assistant text.
+- Set `PI_WEB_SEARCH=0` (or `false`, `no`, `off`) to disable it for a run.
+
+## Development
+
+The extension entry point is `extensions/pi-web-search/index.ts`.
