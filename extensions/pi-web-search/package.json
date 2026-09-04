@@ -1,0 +1,35 @@
+{
+  "name": "@weclio/pi-web-search",
+  "version": "0.1.4",
+  "description": "Pi extension that enables native web search for supported OpenAI APIs.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "files": [
+    "index.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivanjinme/weclio-plugins.git",
+    "directory": "extensions/pi-web-search"
+  },
+  "bugs": {
+    "url": "https://github.com/ivanjinme/weclio-plugins/issues"
+  },
+  "homepage": "https://github.com/ivanjinme/weclio-plugins/tree/main/extensions/pi-web-search",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "name": "@weclio/pi-submarine",
+  "version": "0.2.0",
+  "description": "Weclio-maintained Pi extension for focused foreground child-session delegation.",
+  "author": "Daniel Nouri",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivanjinme/weclio-plugins.git",
+    "directory": "extensions/pi-submarine"
+  },
+  "homepage": "https://github.com/ivanjinme/weclio-plugins/tree/main/extensions/pi-submarine",
+  "bugs": {
+    "url": "https://github.com/ivanjinme/weclio-plugins/issues"
+  },
+  "type": "module",
+  "keywords": [
+    "agents",
+    "pi",
+    "pi-extension",
+    "pi-package",
+    "subagent",
+    "subagents"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
+    "smoke:registration": "vitest run test/registration.test.ts"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "0.79.1",
+    "@earendil-works/pi-coding-agent": "0.79.1",
+    "@types/node": "24.12.4",
+    "typebox": "1.1.38",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

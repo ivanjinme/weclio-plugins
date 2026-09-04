@@ -1,38 +1,51 @@
-# @weclio/pi-web-search
+# Weclio Pi Plugins
 
-A [Pi](https://github.com/earendil-works/pi-mono) extension that enables native web search for supported OpenAI Responses APIs.
+Monorepo for Pi extensions maintained by Weclio. Each directory under `extensions/` is an independently versioned and publishable npm package.
 
-## Install
+## Packages
 
-Install into a Pi project:
+| Package | Entry point | Purpose |
+| --- | --- | --- |
+| `@weclio/pi-web-search` | `extensions/pi-web-search/index.ts` | Enables native OpenAI Responses web search. |
+| `@weclio/pi-submarine` | `extensions/pi-submarine/src/index.ts` | Delegates focused work to foreground child Pi sessions. |
 
-```bash
-pi install -l npm:@weclio/pi-web-search
-```
+## Local development
 
-Then reload an active session with `/reload`.
-
-### Enable
-
-Works with any model whose **API** is `openai-responses`, `azure-openai-responses`, or `openai-codex-responses`. For a custom provider, set its **Base URL** and **API** type under **Settings → Models** (see [models.dev](https://models.dev/) for details).
-
-## Behavior
-
-- Adds the native `{ type: "web_search" }` tool to Responses requests and web-search guidance to the system prompt.
-- Removes OpenAI UTM query parameters from assistant text.
-- Set `PI_WEB_SEARCH=0` to disable.
-
-## Development
-
-The extension entry point is `extensions/pi-web-search/index.ts`.
-
-## Release
-
-Publishing is automated through GitHub Actions and an npm Trusted Publisher. To release a new version, update `package.json`, commit it, then create and push a matching version tag:
+Install workspace development dependencies once:
 
 ```bash
-git tag v0.1.1
-git push origin v0.1.1
+npm install
 ```
 
-The `v0.1.1` tag must match the `version` in `package.json`.
+Load local packages from a Pi project's `.pi/settings.json`:
+
+```json
+{
+  "extensions": [
+    "D:/ivanj/Documents/0-1/2_product/weclio/weclio-plugins/extensions/pi-web-search",
+    "D:/ivanj/Documents/0-1/2_product/weclio/weclio-plugins/extensions/pi-submarine"
+  ]
+}
+```
+
+After changing an extension, reload the Pi session; in pi-web, use its extension reload action or restart the development server.
+
+## Checks
+
+```bash
+npm run check
+npm run pack:all
+```
+
+## Release one package
+
+1. Update that package's `version`.
+2. Commit and push.
+3. Create and push a tag in this form:
+
+```bash
+git tag extensions/pi-web-search/v0.1.5
+git push origin extensions/pi-web-search/v0.1.5
+```
+
+The GitHub workflow derives the package directory from the tag and verifies its version before publishing with npm Trusted Publishing. Replace `pi-web-search` with the relevant extension directory.

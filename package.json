@@ -1,25 +1,17 @@
 {
-  "name": "@weclio/pi-web-search",
-  "version": "0.1.4",
-  "description": "Pi extension that enables native web search for supported OpenAI APIs.",
-  "files": [
-    "extensions/pi-web-search",
-    "README.md",
-    "LICENSE"
+  "name": "@weclio/pi-plugins",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "workspaces": [
+    "extensions/*"
   ],
-  "pi": {
-    "extensions": [
-      "./extensions/pi-web-search"
-    ]
-  },
-  "peerDependencies": {
-    "@earendil-works/pi-ai": "*",
-    "@earendil-works/pi-coding-agent": "*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ivanjinme/weclio-plugins.git"
-  },
-  "bugs": "https://github.com/ivanjinme/weclio-plugins/issues",
-  "homepage": "https://github.com/ivanjinme/weclio-plugins#readme"
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "check": "npm run typecheck && npm run test",
+    "pack:all": "npm pack --workspaces --dry-run"
+  }
 }
