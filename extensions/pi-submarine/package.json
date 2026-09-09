@@ -1,6 +1,6 @@
 {
   "name": "@weclio/pi-submarine",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Weclio-maintained Pi extension for focused foreground child-session delegation.",
   "author": "Daniel Nouri",
   "license": "MIT",
