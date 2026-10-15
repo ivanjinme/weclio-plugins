@@ -1,6 +1,6 @@
 {
   "name": "@weclio/pi-citations",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pi extension that preserves and renders citations in chat and file writes.",
   "type": "module",
   "license": "MIT",
@@ -20,7 +20,9 @@
     "test:integration": "node test/integration.mjs && node test/native-http.integration.mjs"
   },
   "pi": {
-    "extensions": ["./index.ts"]
+    "extensions": [
+      "./index.ts"
+    ]
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
