@@ -1,7 +1,7 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionToolContext } from "@earendil-works/pi-coding-agent";
 import { afterEach, describe, expect, it } from "vitest";
 import register, { subagentListTool, subagentResumeTool, subagentTool } from "../src/index.js";
 
@@ -145,7 +145,7 @@ describe("pi-submarine extension registration", () => {
         return await subagentListTool.execute("tool-call-2", {}, undefined, undefined, {
           cwd,
           modelRegistry: { getAll: () => [], hasConfiguredAuth: () => false },
-        } as unknown as ExtensionContext);
+        } as unknown as ExtensionToolContext);
       } finally {
         if (previousAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
         else process.env.PI_CODING_AGENT_DIR = previousAgentDir;
@@ -157,13 +157,13 @@ describe("pi-submarine extension registration", () => {
       sessionManager: { getSessionFile: () => undefined },
       modelRegistry: {},
       model: undefined,
-    } as unknown as ExtensionContext)).rejects.toThrow("requires a persisted parent Pi session");
+    } as unknown as ExtensionToolContext)).rejects.toThrow("requires a persisted parent Pi session");
     await expect(subagentResumeTool.execute("tool-call-resume", { sessionId: "session-1", message: "continue" }, undefined, undefined, {
       cwd,
       sessionManager: { getSessionFile: () => undefined },
       modelRegistry: {},
       model: undefined,
-    } as unknown as ExtensionContext)).rejects.toThrow("subagent_resume requires a persisted parent Pi session");
+    } as unknown as ExtensionToolContext)).rejects.toThrow("subagent_resume requires a persisted parent Pi session");
     expect(listResult.content[0]).toMatchObject({
       type: "text",
       text: expect.stringContaining(`Available subagents for ${cwd}:`),

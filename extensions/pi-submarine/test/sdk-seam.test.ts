@@ -1,9 +1,12 @@
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
+import { createServer } from "node:http";
+import { once } from "node:events";
 import path from "node:path";
-import { createAgentSession, DefaultResourceLoader, SessionManager, SettingsManager } from "@earendil-works/pi-coding-agent";
+import { createAgentSession, DefaultResourceLoader, ModelRegistry, ModelRuntime, SessionManager, SettingsManager, type ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { afterEach, describe, expect, it } from "vitest";
 import register from "../src/index.js";
+import { runSubagent, runSubagentResume } from "../src/runner.js";
 
 const tempRoots: string[] = [];
 
@@ -18,6 +21,70 @@ afterEach(async () => {
 });
 
 describe("Pi SDK integration seam", () => {
+  it.each(["fresh", "fork"] as const)("inherits runtime-only API keys for %s children and resume without persisting them", async (context) => {
+    const root = await tempRoot();
+    const cwd = path.join(root, "project");
+    const agentDir = path.join(root, "agent-dir");
+    await mkdir(cwd, { recursive: true });
+    await mkdir(agentDir, { recursive: true });
+    let expectedKey = "submarine-runtime-only-test-key";
+    const authorizations: (string | undefined)[] = [];
+    const server = createServer((request, response) => {
+      authorizations.push(request.headers.authorization);
+      request.resume();
+      request.on("end", () => {
+        if (request.headers.authorization !== `Bearer ${expectedKey}`) {
+          response.writeHead(401).end();
+          return;
+        }
+        response.writeHead(200, { "Content-Type": "text/event-stream" });
+        response.end(`data: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: { role: "assistant", content: "authenticated child" }, finish_reason: null }] })}\n\ndata: ${JSON.stringify({ id: "fixture", choices: [{ index: 0, delta: {}, finish_reason: "stop" }] })}\n\ndata: [DONE]\n\n`);
+      });
+    });
+    server.listen(0, "127.0.0.1");
+    await once(server, "listening");
+    try {
+      const address = server.address();
+      if (!address || typeof address === "string") throw new Error("expected TCP server");
+      const provider = "submarine-auth-fixture";
+      await writeFile(path.join(agentDir, "models.json"), JSON.stringify({ providers: {
+        [provider]: { baseUrl: `http://127.0.0.1:${address.port}/v1`, api: "openai-completions", authHeader: true, models: [{ id: "fixture" }] },
+      } }));
+      await writeFile(path.join(agentDir, "settings.json"), JSON.stringify({ retry: { enabled: false } }));
+      const runtime = await ModelRuntime.create({
+        authPath: path.join(agentDir, "auth.json"), modelsPath: path.join(agentDir, "models.json"),
+      });
+      await runtime.setRuntimeApiKey(provider, expectedKey);
+      const model = runtime.getModel(provider, "fixture");
+      expect(model).toBeDefined();
+      const parent = SessionManager.create(cwd, path.join(root, "sessions"));
+      parent.appendModelChange(provider, "fixture");
+      parent.appendMessage({ role: "user", content: "Parent request", timestamp: Date.now() });
+      // Materialize the parent session so fork can reopen it.
+      parent.appendMessage({ role: "assistant", content: [{ type: "text", text: "Ready" }],
+        api: model!.api, provider, model: "fixture", stopReason: "stop", timestamp: Date.now(),
+        usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, totalTokens: 0,
+          cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 } },
+      });
+      const ctx = { cwd, sessionManager: parent, model, modelRegistry: new ModelRegistry(runtime) } as unknown as ExtensionContext;
+      const options = { deps: { getAgentDir: () => agentDir } };
+      const result = await runSubagent({ task: "Reply briefly", context }, undefined, undefined, ctx, options);
+      expect(result.details.run.status).toBe("completed");
+      expect(result.content[0]?.text).toContain("authenticated child");
+
+      expectedKey = "submarine-rotated-runtime-test-key";
+      await runtime.setRuntimeApiKey(provider, expectedKey);
+      const resumed = await runSubagentResume({ sessionId: result.details.run.sessionId, message: "Continue" }, undefined, undefined, ctx, options);
+      expect(resumed.details.run.status).toBe("completed");
+      expect(resumed.content[0]?.text).toContain("authenticated child");
+      expect(authorizations).toEqual(["Bearer submarine-runtime-only-test-key", `Bearer ${expectedKey}`]);
+      expect(JSON.parse(await readFile(path.join(agentDir, "auth.json"), "utf8"))).toEqual({});
+    } finally {
+      server.closeAllConnections();
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
+  }, 20_000);
+
   it("creates a persisted child AgentSession and binds pi-submarine tools from the inline extension factory", async () => {
     const root = await tempRoot();
     const cwd = path.join(root, "project");

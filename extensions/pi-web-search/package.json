@@ -1,6 +1,6 @@
 {
   "name": "@weclio/pi-web-search",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Pi extension that enables native web search for supported OpenAI APIs.",
   "type": "module",
   "engines": {
@@ -11,6 +11,10 @@
     "README.md",
     "LICENSE"
   ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
   "pi": {
     "extensions": [
       "./index.ts"
@@ -18,7 +22,7 @@
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
-    "@earendil-works/pi-coding-agent": "*"
+    "@earendil-works/pi-coding-agent": ">=1.0.2"
   },
   "repository": {
     "type": "git",

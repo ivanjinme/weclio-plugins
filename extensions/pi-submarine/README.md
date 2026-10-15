@@ -8,7 +8,7 @@ Weclio-maintained fork of [`pi-submarine`](https://github.com/dnouri/pi-submarin
 pi install npm:@weclio/pi-submarine
 ```
 
-Reload the active Pi session after installation.
+Requires Pi >=1.0.2. Reload the active Pi session after installation.
 
 ## Tools
 
@@ -26,7 +26,7 @@ A skill marked `disable-model-invocation: true` is not exposed for automatic mod
 
 ## Development
 
-The extension entry point is `src/index.ts`. Run from this package directory:
+The extension entry point is `src/index.ts`. Development dependencies are shared at the workspace root and target Pi 1.0.2. Child sessions use an isolated ModelRuntime for their `agentDir`, inheriting parent runtime API-key overrides (including `--api-key`) in memory on each launch/resume. Stored/OAuth credentials continue using the agent directory; keys are never written to disk. The removed `modelRegistry` factory option is no longer passed. Run from this package directory:
 
 ```bash
 npm run typecheck

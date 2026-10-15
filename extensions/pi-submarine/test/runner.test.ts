@@ -35,7 +35,7 @@ function fakeContext(
   return {
     cwd,
     sessionManager: new FakeSessionManager(sessionFile, cwd, options.leafId),
-    modelRegistry: options.modelRegistry ?? {},
+    modelRegistry: options.modelRegistry ?? fakeModelRegistry([]),
     model: options.model,
   } as unknown as ExtensionContext;
 }
@@ -52,6 +52,7 @@ function fakeModelRegistry(models: unknown[], authenticated: unknown[] = models)
   const authenticatedModels = new Set(authenticated);
   return {
     getAll: () => models,
+    getProviderAuthStatus: () => ({ configured: true, source: "stored" }),
     hasConfiguredAuth: (candidate: unknown) => authenticatedModels.has(candidate),
   };
 }

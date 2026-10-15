@@ -30,10 +30,12 @@ describe("package metadata", () => {
 
     expect(packageJson.peerDependencies).toEqual({
       "@earendil-works/pi-ai": "*",
-      "@earendil-works/pi-coding-agent": "*",
+      "@earendil-works/pi-coding-agent": ">=1.0.2",
       typebox: "*",
     });
-    expect(packageJson.devDependencies["@earendil-works/pi-coding-agent"]).toBe("0.79.1");
+    const workspace = JSON.parse(await readFile(new URL("../../../package.json", import.meta.url), "utf8"));
+    expect(workspace.devDependencies["@earendil-works/pi-coding-agent"]).toBe("1.0.2");
+    expect(packageJson.devDependencies).toBeUndefined();
     expect(packageJson.dependencies ?? {}).toEqual({});
   });
 

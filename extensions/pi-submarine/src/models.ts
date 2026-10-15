@@ -1,5 +1,27 @@
 import { getSupportedThinkingLevels, type Api, type Model, type ModelThinkingLevel } from "@earendil-works/pi-ai";
-import type { ModelRegistry } from "@earendil-works/pi-coding-agent";
+import path from "node:path";
+import { ModelRuntime, type ModelRegistry } from "@earendil-works/pi-coding-agent";
+
+/** Preserve --api-key overrides without sharing mutable provider registrations or writing secrets. */
+export async function createSubagentModelRuntime(
+  agentDir: string,
+  registry: ModelRegistry,
+): Promise<ModelRuntime | undefined> {
+  const providers = [...new Set(registry.getAll().map((model) => model.provider))]
+    .filter((provider) => registry.getProviderAuthStatus(provider).source === "runtime");
+  if (!providers.length) return undefined;
+
+  const runtime = await ModelRuntime.create({
+    authPath: path.join(agentDir, "auth.json"),
+    modelsPath: path.join(agentDir, "models.json"),
+  });
+  for (const provider of providers) {
+    const key = await registry.getApiKeyForProvider(provider);
+    if (!key) throw new Error(`Could not inherit runtime authentication for subagent provider '${provider}'.`);
+    await runtime.setRuntimeApiKey(provider, key);
+  }
+  return runtime;
+}
 
 export type SubagentModelRegistry = Pick<ModelRegistry, "getAll" | "hasConfiguredAuth">;
 

@@ -20,7 +20,7 @@ import { MissingMarkdownAgentError, resolveMarkdownAgent } from "./agents.js";
 import { cloneRunView, createActivityState, createInitialRunView, reduceActivityEvent } from "./activity.js";
 import { QueuedActivityLogWriter, appendActivityLogFinished, appendActivityLogStarted, ensureActivityLogHeader, type DegradedActivityLogOptions } from "./activity-log.js";
 import { appendManifestRecord, findLatestEpisodeStartedRecordBySessionFile, readManifestRecords, requireUniqueStartedRecordBySessionId, type DegradedAppendOptions, type EpisodeStartedManifestRecord, type StartedManifestRecord } from "./manifest.js";
-import { resolveRecordedSubagentModel, resolveSubagentModel, resolveSubagentThinkingLevel } from "./models.js";
+import { createSubagentModelRuntime, resolveRecordedSubagentModel, resolveSubagentModel, resolveSubagentThinkingLevel } from "./models.js";
 import { errorHeading, namedAgentSelection, omittedAgentSelection, renderSubagentInterrupted, renderSubagentProgress, renderSubagentRecoverableError, renderSubagentResult } from "./render.js";
 import { assertDirectoryExists, manifestPathForSubagentsRoot, resolveFreshCwd, resolveSubagentsRoot, type SubagentsRoot } from "./sessions.js";
 import { buildSubagentPromptEnvelope } from "./tool-prompts.js";
@@ -834,10 +834,11 @@ async function createChildSession(
   deps: RunnerDependencies,
   ctx: ExtensionContext,
 ): Promise<ChildSessionResult> {
+  const modelRuntime = await createSubagentModelRuntime(plan.agentDir, ctx.modelRegistry);
   return deps.createAgentSession({
     cwd: plan.effectiveCwd,
     agentDir: plan.agentDir,
-    modelRegistry: ctx.modelRegistry,
+    ...(modelRuntime === undefined ? {} : { modelRuntime }),
     ...(plan.model === undefined ? {} : { model: plan.model }),
     ...(plan.thinkingLevel === undefined ? {} : { thinkingLevel: plan.thinkingLevel as NonNullable<CreateAgentSessionOptions["thinkingLevel"]> }),
     settingsManager: plan.settingsManager,

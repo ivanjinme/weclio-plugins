@@ -125,9 +125,7 @@ export default function webSearchExtension(pi: ExtensionAPI): void {
 
   pi.on("before_agent_start", (event, ctx) => {
     if (!isNativeSearchApi(ctx.model?.api) || !isWebSearchEnabled()) return;
-    return {
-      systemPrompt: `${event.systemPrompt}\n${WEB_SEARCH_SECTION}`,
-    };
+    event.systemPromptOptions.sections.web_search = WEB_SEARCH_SECTION.trim();
   });
 
   pi.on("message_end", (event, ctx) => {

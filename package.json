@@ -11,7 +11,22 @@
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "test:citations:pi": "npm run test:integration --workspace @weclio/pi-citations",
     "check": "npm run typecheck && npm run test",
     "pack:all": "npm pack --workspaces --dry-run"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "1.0.2",
+    "@earendil-works/pi-coding-agent": "1.0.2",
+    "@types/node": "24.12.4",
+    "typebox": "1.3.27",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  },
+  "overrides": {
+    "@earendil-works/pi-agent-core": "1.0.2",
+    "@earendil-works/pi-codemode": "1.0.2",
+    "@earendil-works/pi-mcp": "1.0.2",
+    "@earendil-works/pi-tui": "1.0.2"
   }
 }
