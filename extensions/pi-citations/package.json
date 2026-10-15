@@ -29,7 +29,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ivanjinme/weclio-plugins.git",
-    "directory": "extensions/weclio-citations"
+    "directory": "extensions/pi-citations"
   },
   "publishConfig": {
     "access": "public"

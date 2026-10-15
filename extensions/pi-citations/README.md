@@ -1,13 +1,13 @@
 # @weclio/pi-citations
 
-Pi citation extension (`weclio-citations`), maintained in the shared plugins workspace. Requires Pi >=1.0.2; no older-host compatibility path is maintained.
+Pi citation extension (`pi-citations`), maintained in the shared plugins workspace. Requires Pi >=1.0.2; no older-host compatibility path is maintained.
 
 ## Local use
 
 Load the package explicitly, or add its directory to the target project's `.pi/settings.json` packages and reload Pi:
 
 ```sh
-pi -e /path/to/weclio-plugins/extensions/weclio-citations
+pi -e /path/to/weclio-plugins/extensions/pi-citations
 ```
 
 CLI schemas, cached documents and search behavior stay unchanged. This package has no runtime dependency on the weclio CLI source tree; it defines only the consumed citation/document wire shapes. The companion `pi-web-search` uses `sections.web_search`; citations use `sections.weclio_citations`. Neither extension reads or overrides the complete prompt.
