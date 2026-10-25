@@ -52,6 +52,13 @@ export function register(registry: Registry, citation: Citation): string {
   return id;
 }
 
+// 直接扫描单括号前缀，空 ID 和未闭合标记也必须报错；不解析 Markdown。
+const SINGLE_MARKER = /(?<![\\\[])\[cite:([^\[\]\n]*)/g;
+
+export function hasCitationMarker(text: string): boolean {
+  return /(?<!\\)\[\[cite:/.test(text) || text.search(SINGLE_MARKER) !== -1;
+}
+
 export function render(
   text: string,
   registry: Registry,
@@ -78,6 +85,10 @@ export function render(
   });
   if (/(?<!\\)\[\[cite:/.test(rendered.replace(/(?<!\\)\[\[cite:[^\[\]\n]*\]\]/g, ""))) {
     onError(new CitationError("INVALID_CITATION_MARKER", [], "Use the complete [[cite:ID]] from supporting evidence; retry."));
+  }
+  for (const match of text.matchAll(SINGLE_MARKER)) {
+    onError(new CitationError("INVALID_CITATION_MARKER", [match[1]!],
+      "Use the exact [[cite:ID]] from supporting evidence with two pairs of square brackets; retry without changing the claim."));
   }
   return rendered;
 }

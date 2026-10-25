@@ -50,7 +50,7 @@ export default async function fixtureProvider(pi: any) {
       } else if (["ordinary", "reverse", "search-disabled"].includes(mode)) {
         content = calls === 1 ? [call("write", { path: "arbitrary.output", content: "Plain [existing](https://example.org/)." })] : [text("DONE")];
       } else if (mode === "literal") {
-        const example = "Example: \\[[cite:ID]]";
+        const example = "Example: \\[[cite:ID]] and \\[cite:ID]; ordinary [1] [2].";
         content = calls === 1 ? [call("write", { path: "arbitrary.output", content: example })] : [text(example)];
       } else if (calls === 1) {
         content = [call("read", { path: "fixture.json" })];
@@ -58,6 +58,24 @@ export default async function fixtureProvider(pi: any) {
         const { citation } = JSON.parse(readFileSync("fixture.json", "utf8"));
         const claim = `CLI claim [${citation.source}](${citation.url})`;
         content = calls === 2 ? [call("write", { path: "arbitrary.output", content: claim })] : [text(claim)];
+      } else if (mode === "markdown") {
+        const markdown = `Link [cite:${ids[0]}](https://example.org/inline).`;
+        content = calls === 2 ? [call("write", { path: "arbitrary.output", content: markdown })] : [text(markdown)];
+      } else if (mode === "single-file") {
+        if (calls === 2) content = [call("write", {
+          path: "arbitrary.output", content: `Single [cite:${ids[0]}]; double [[cite:${ids[0]}]].\nTAIL`,
+        })];
+        else if (calls === 3) content = [call("edit", { path: "arbitrary.output", edits: [
+          { oldText: "TAIL", newText: `Edited [cite:${ids[0]}]; double [[cite:${ids[0]}]].` },
+        ] })];
+        else content = [text("DONE")];
+      } else if (["chat-single", "chat-single-limit", "chat-single-drop", "chat-single-mixed"].includes(mode)) {
+        const fixed = mode === "chat-single" && calls > 2 || mode === "chat-single-drop" && calls > 3;
+        const draft = mode === "chat-single-mixed"
+          ? `Draft [[cite:${ids[0]}]] [cite:${ids[0]}]`
+          : `Draft [cite:${ids[0]}]`;
+        content = [text(fixed ? `Fixed [[cite:${ids[0]}]]`
+          : mode === "chat-single-drop" && calls === 3 ? "Citation-free rewrite." : draft)];
       } else if (["chat", "chat-limit", "chat-drop", "chat-drop-limit", "chat-tool"].includes(mode)) {
         const fixed = mode === "chat" && calls > 2 || mode === "chat-drop" && calls > 3;
         content = [text(fixed ? `Fixed [[cite:${ids[0]}]]` : (mode === "chat-drop" && calls === 3 || mode === "chat-drop-limit" && calls > 2 || mode === "chat-tool" && calls > 2) ? "Citation-free rewrite." : `Draft [[cite:${ids[0]}]] [[cite:c7]]`)];

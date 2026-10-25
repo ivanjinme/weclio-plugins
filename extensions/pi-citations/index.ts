@@ -1,12 +1,12 @@
 import type { TextContent } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { annotateCli, citationId, CitationError, register, render, type Citation, type Registry } from "./citations.js";
+import { annotateCli, citationId, CitationError, hasCitationMarker, register, render, type Citation, type Registry } from "./citations.js";
 
 import { attachNative, extractNativeItem, nativeKey, type NativeItem } from "./native.js";
 
 const ENTRY = "weclio-citations";
 const MAX_RETRIES = 2;
-const RULES = "Cite supporting evidence beside each claim. When that evidence supplies a citation marker, use it exactly, including in file content. Preserve citations when rewriting. Never invent citation IDs or URLs. Preserve existing Markdown/native citations; do not convert them back into markers. For literal citation-marker examples, escape the opening bracket with a backslash. Do not include internal source-ID mappings in delivered content.";
+const RULES = "Cite supporting evidence beside each claim. When that evidence supplies a citation marker, use it exactly, including in file content. Citation markers require two pairs of square brackets: [[cite:ID]]. Preserve citations when rewriting. Never invent citation IDs or URLs. Preserve existing Markdown/native citations; do not convert them back into markers. For literal citation-marker examples, escape the opening bracket with a backslash. Do not include internal source-ID mappings in delivered content.";
 
 export default function weclioCitations(pi: ExtensionAPI): void {
   let registry: Registry = new Map();
@@ -120,7 +120,7 @@ export default function weclioCitations(pi: ExtensionAPI): void {
     });
     const final = message.stopReason === "stop";
     if (chatError && final && !content.some((block) => block.type === "text" &&
-      (/(?<!\\)\[\[cite:/.test(block.text) || block.citations?.length || /\[[^\n]+\]\(https?:\/\/[^\s)]+\)/.test(block.text)))) {
+      (hasCitationMarker(block.text) || block.citations?.length || /\[[^\n]+\]\(https?:\/\/[^\s)]+\)/.test(block.text)))) {
       // A citation-free retry is not a repair; keep the draft with visible markers.
       error = new CitationError("MISSING_CITATION", [], "Restore the citations without changing the draft's conclusions.");
       chatError.error = error;
