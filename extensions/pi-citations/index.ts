@@ -6,7 +6,13 @@ import { attachNative, extractNativeItem, nativeKey, type NativeItem } from "./n
 
 const ENTRY = "weclio-citations";
 const MAX_RETRIES = 2;
-const RULES = "Cite supporting evidence beside each claim. When that evidence supplies a citation marker, use it exactly, including in file content. Citation markers require two pairs of square brackets: [[cite:ID]]. Preserve citations when rewriting. Never invent citation IDs or URLs. Preserve existing Markdown/native citations; do not convert them back into markers. For literal citation-marker examples, escape the opening bracket with a backslash. Do not include internal source-ID mappings in delivered content.";
+const RULES = [
+  "Apply these rules to evidence processing, responses, and file content:",
+  "- Preserve provenance: When extracting or transforming evidence, retain each block’s `{ content, citation }` association where present. In text or Markdown, keep the source link or citation marker adjacent to the corresponding content.",
+  "- Cite claims: Place supporting citations beside each source-dependent claim. Do not replace citations with unlinked source descriptions.",
+  "- Preserve citation format: Use supplied markers exactly: [[cite:ID]] (two pairs of square brackets). Preserve existing Markdown/native citations; do not convert them back into markers. Never invent citation IDs or URLs.",
+  "- Keep internals out: Do not include internal source-ID mappings in deliverables. When showing a literal marker example, escape its opening bracket with a backslash.",
+].join("\n");
 
 export default function weclioCitations(pi: ExtensionAPI): void {
   let registry: Registry = new Map();

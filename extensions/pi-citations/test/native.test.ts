@@ -91,6 +91,24 @@ describe("pending native source lifecycle", () => {
     return { dispatch, appendEntry };
   }
 
+  it("injects provenance rules covering evidence processing, responses and file content", () => {
+    const { dispatch } = harness();
+    const sections: Record<string, string> = { existing: "Keep this section" };
+    dispatch("before_agent_start", { systemPromptOptions: { sections } });
+    const rules = sections.weclio_citations!;
+
+    expect(sections.existing).toBe("Keep this section");
+    expect(rules).toContain("Apply these rules to evidence processing, responses, and file content:");
+    expect(rules).toContain("retain each block’s `{ content, citation }` association where present");
+    expect(rules).toContain("keep the source link or citation marker adjacent to the corresponding content");
+    expect(rules).toContain("Do not replace citations with unlinked source descriptions");
+    expect(rules).toContain("Use supplied markers exactly:");
+    expect(rules).toContain("Preserve existing Markdown/native citations; do not convert them back into markers");
+    expect(rules).toContain("Never invent citation IDs or URLs");
+    expect(rules).toContain("Do not include internal source-ID mappings in deliverables");
+    expect(rules).toContain("escape its opening bracket with a backslash");
+  });
+
   it.each(["error", "aborted"] as const)("discards %s response sources before retry", (stopReason) => {
     const { dispatch, appendEntry } = harness();
     const draft = message([{ type: "text", text: "Provider result", textSignature: signature("msg-1") }]);

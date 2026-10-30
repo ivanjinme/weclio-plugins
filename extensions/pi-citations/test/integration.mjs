@@ -57,8 +57,9 @@ try {
   assert.equal(mixed.requests[1].ids.length, 2);
   assert.equal(mixed.requests[0].ids.length, 0);
   assert.equal(rules(mixed.requests[0]).length, 1);
-  assert(rules(mixed.requests[0])[0].includes("When that evidence supplies a citation marker, use it exactly"));
-  assert(rules(mixed.requests[0])[0].includes("escape the opening bracket"));
+  assert(rules(mixed.requests[0])[0].includes("retain each block’s `{ content, citation }` association where present"));
+  assert(rules(mixed.requests[0])[0].includes("Use supplied markers exactly"));
+  assert(rules(mixed.requests[0])[0].includes("escape its opening bracket"));
   assert(rules(mixed.requests[0])[0].includes("[[cite:ID]]"), "injected rules must teach canonical double markers");
   assert(mixed.requests.every((request) => rules(request).length === 1));
   assert(mixed.requests.every((request) => !request.messages.some((message) => message.role !== "system" && JSON.stringify(message.content).includes("Never invent citation IDs or URLs"))));

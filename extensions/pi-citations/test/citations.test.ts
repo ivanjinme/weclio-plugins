@@ -120,6 +120,20 @@ describe("CLI document annotation", () => {
     expect(registry.size).toBe(1);
   });
 
+  it("retains a leading ECHA source link while registering and rendering its trailing marker", () => {
+    const sourceLink = `[${chronic.source}](${chronic.url})`;
+    const content = `Source: ${sourceLink}\n\nOriginal evidence.\n`;
+    const input = { identifier, blocks: [{ content, citation: chronic }] };
+    const registry = new Map();
+    const output = JSON.parse(annotateCli(JSON.stringify(input), (citation) => register(registry, citation)));
+    const id = citationId(chronic);
+
+    expect(registry.get(id)).toEqual(chronic);
+    expect(output.blocks[0]).toEqual({ content: `${content}\n\n[[cite:${id}]]`, citation: chronic });
+    expect(render(output.blocks[0].content, registry)).toBe(`${content}\n\n${sourceLink}`);
+    expect(input.blocks[0]!.content).toBe(content);
+  });
+
   it("parses concatenated JSON documents with braces and escaped quotes in content", () => {
     const second = { identifier, blocks: [{ content: 'Data {with} "quotes" and \\ escapes', citation: adme }] };
     const registry = new Map();
