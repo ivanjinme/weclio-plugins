@@ -9,6 +9,7 @@ Monorepo for Pi extensions maintained by Weclio. Each directory under `extension
 | `@weclio/pi-web-search` | `extensions/pi-web-search/index.ts` | Enables native OpenAI Responses web search. |
 | `@weclio/pi-submarine` | `extensions/pi-submarine/src/index.ts` | Delegates focused work to foreground child Pi sessions. |
 | `@weclio/pi-citations` | `extensions/pi-citations/index.ts` | Preserves and renders citations in chat and file writes. |
+| `@weclio/pi-persona` | `extensions/pi-persona/index.ts` | Replaces only the opening identity with the Weclio toxicologist persona. |
 
 ## Local development
 

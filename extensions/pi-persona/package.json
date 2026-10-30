@@ -1,0 +1,22 @@
+{
+  "name": "@weclio/pi-persona",
+  "version": "0.1.0",
+  "description": "Replace only Pi's opening identity with the Weclio toxicologist persona.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22.19.0" },
+  "keywords": ["pi-package"],
+  "files": ["index.ts", "README.md", "LICENSE"],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "pi": { "extensions": ["./index.ts"] },
+  "peerDependencies": { "@earendil-works/pi-coding-agent": ">=1.0.2" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivanjinme/weclio-plugins.git",
+    "directory": "extensions/pi-persona"
+  },
+  "publishConfig": { "access": "public" }
+}
