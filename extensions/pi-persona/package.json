@@ -1,6 +1,6 @@
 {
   "name": "@weclio/pi-persona",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Replace only Pi's opening identity with the Weclio toxicologist persona.",
   "type": "module",
   "license": "MIT",
