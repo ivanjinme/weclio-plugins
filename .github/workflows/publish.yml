@@ -48,4 +48,4 @@ jobs:
       - name: Publish aggregate package
         run: |
           version="$(node -p "require('./bundle/package.json').version")"
-          npm publish "dist/weclio-plugins-$version.tgz" --access public --provenance
+          npm publish "./dist/weclio-plugins-$version.tgz" --access public --provenance
