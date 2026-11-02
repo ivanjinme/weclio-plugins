@@ -46,8 +46,6 @@ jobs:
           npm run verify:package -- "dist/weclio-plugins-$version.tgz"
 
       - name: Publish aggregate package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           version="$(node -p "require('./bundle/package.json').version")"
           npm publish "./dist/weclio-plugins-$version.tgz" --access public --provenance
