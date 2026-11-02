@@ -83,7 +83,7 @@ try {
   manifest.version += "-update-test";
   await writeFile(join(directory, "README.md"), (await readFile(join(directory, "README.md"), "utf8")) + "\nupdated-harness-fixture\n");
   await writeFile(join(directory, "package.json"), JSON.stringify(manifest));
-  const updated = JSON.parse((await npm(["pack", "--json", "--pack-destination", temporary], directory)).stdout)[0];
+  const updated = Object.values(JSON.parse((await npm(["pack", "--json", "--pack-destination", temporary], directory)).stdout))[0];
   console.log("Verifying harness: package update");
   await npm(["install", join(temporary, updated.filename)], npmRoot);
   await assertResources(installedLoader, installedSettings);

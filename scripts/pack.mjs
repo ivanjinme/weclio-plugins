@@ -30,7 +30,7 @@ try {
     .map((entry) => entry.split("/").slice(1, 3).join("/")))];
   const packed = JSON.parse(await npm(["pack", ...workspaces.flatMap((name) => ["--workspace", name]),
     "--ignore-scripts", "--json", "--pack-destination", temporary], root));
-  for (const component of packed) {
+  for (const component of Object.values(packed)) {
     const name = component.name.split("/").at(-1);
     const directory = join(stage, "extensions", name);
     await mkdir(directory, { recursive: true });
