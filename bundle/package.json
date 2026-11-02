@@ -1,6 +1,6 @@
 {
   "name": "@weclio/plugins",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "description": "Weclio Pi harness extensions.",
   "type": "module",
   "license": "MIT",

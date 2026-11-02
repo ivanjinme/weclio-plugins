@@ -15,7 +15,7 @@ pi update npm:@weclio/plugins
 
 ```bash
 mkdir weclio-plugins
-tar -xzf weclio-plugins-0.1.0.tgz -C weclio-plugins
+tar -xzf weclio-plugins-0.1.5.tgz -C weclio-plugins
 pi install ./weclio-plugins/package
 ```
 

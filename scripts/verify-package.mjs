@@ -14,7 +14,7 @@ process.env.PI_CODING_AGENT_DIR = join(temporary, "agent");
 process.env.PI_OFFLINE = "1";
 const { createAgentSession, DefaultPackageManager, DefaultResourceLoader, SettingsManager, SessionManager } = await import("@earendil-works/pi-coding-agent");
 const sessions = [];
-const tarball = resolve(process.argv[2] ?? "dist/weclio-plugins-0.1.0.tgz");
+const tarball = resolve(process.argv[2] ?? "dist/weclio-plugins-0.1.5.tgz");
 const tar = process.platform === "win32" ? join(process.env.SystemRoot ?? "C:\\Windows", "System32/tar.exe") : "tar";
 try {
   await exec(tar, ["-xzf", tarball, "-C", temporary]);

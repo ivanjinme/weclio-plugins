@@ -35,7 +35,7 @@ npm run test:citations:pi
 
 ```bash
 npm run pack
-npm run verify:package -- dist/weclio-plugins-0.1.0.tgz
+npm run verify:package -- dist/weclio-plugins-0.1.5.tgz
 ```
 
 - `dist/package/`：4 个 extensions 的完整目录。
@@ -51,7 +51,7 @@ pi -e ./dist/package
 
 1. 更新 `bundle/package.json` 中的聚合包版本。
 2. 检查、打包、验证后提交并推送。
-3. 推送匹配的 `v<version>` tag，例如 `v0.1.0`。
+3. 推送匹配的 `v<version>` tag，例如 `v0.1.5`。
 
 `.github/workflows/publish.yml` 构建并验证 tarball，再通过 Trusted Publishing 发布并生成 provenance。不要本地运行 `npm publish`。
 
