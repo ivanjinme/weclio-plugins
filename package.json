@@ -1,6 +1,7 @@
 {
   "name": "@weclio/pi-plugins",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=22.19.0"
@@ -13,7 +14,8 @@
     "test": "npm run test --workspaces --if-present",
     "test:citations:pi": "npm run test:integration --workspace @weclio/pi-citations",
     "check": "npm run typecheck && npm run test",
-    "pack:all": "npm pack --workspaces --dry-run"
+    "pack": "node scripts/pack.mjs",
+    "verify:package": "node scripts/verify-package.mjs"
   },
   "devDependencies": {
     "@earendil-works/pi-ai": "1.0.2",

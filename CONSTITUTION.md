@@ -55,5 +55,4 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - Trust explicit upstream validation. Don't revalidate ruled-out states.
 
 ### LANGUAGE STANDARDS
-- TS/React: Functional components only. No `any`. Strict ESLint compliance.
 - Code comments: Default to concise **Chinese comments** for non-obvious intent, boundaries, and constraints; do not add comments for obvious code.

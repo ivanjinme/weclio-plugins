@@ -1,57 +1,58 @@
-# Weclio Pi Plugins
+# Weclio Plugins
 
-Monorepo for Pi extensions maintained by Weclio. Each directory under `extensions/` is an independently versioned and publishable npm package.
+**`@weclio/plugins`** 交付 Weclio 的 4 个 Pi harness extensions，不包含业务 CLI 或 skills。
 
-## Packages
+本仓库采用 [MIT 许可证](LICENSE)；`extensions/pi-submarine` 保留其 MIT 许可证及第三方署名。
 
-| Package | Entry point | Purpose |
+## 内容
+
+| Extension | 入口 | 用途 |
 | --- | --- | --- |
-| `@weclio/pi-web-search` | `extensions/pi-web-search/index.ts` | Enables native OpenAI Responses web search. |
-| `@weclio/pi-submarine` | `extensions/pi-submarine/src/index.ts` | Delegates focused work to foreground child Pi sessions. |
-| `@weclio/pi-citations` | `extensions/pi-citations/index.ts` | Preserves and renders citations in chat and file writes. |
-| `@weclio/pi-persona` | `extensions/pi-persona/index.ts` | Replaces only the opening identity with the Weclio toxicologist persona. |
+| web-search | `extensions/pi-web-search/index.ts` | 原生 OpenAI Responses web search |
+| submarine | `extensions/pi-submarine/src/index.ts` | 子 Pi 会话委派 |
+| citations | `extensions/pi-citations/index.ts` | 引用保留与渲染 |
+| persona | `extensions/pi-persona/index.ts` | 会话开头身份定制 |
 
-## Local development
-
-Development dependencies are centralized in the workspace root and target Pi 1.0.2 (the current host). Pi subpackages are pinned together through overrides to prevent incompatible mixed versions. Extensions require Pi >=1.0.2; no older-host compatibility path is maintained.
-
-Install workspace development dependencies once:
+## 安装
 
 ```bash
-npm install
+pi install npm:@weclio/plugins
 ```
 
-Load local packages from a Pi project's `.pi/settings.json`:
+更新、旧包迁移及本地文件安装见[包使用说明](bundle/README.md)。
 
-```json
-{
-  "extensions": [
-    "D:/ivanj/Documents/0-1/2_product/weclio/weclio-plugins/extensions/pi-web-search",
-    "D:/ivanj/Documents/0-1/2_product/weclio/weclio-plugins/extensions/pi-submarine",
-    "D:/ivanj/Documents/0-1/2_product/weclio/weclio-plugins/extensions/pi-citations"
-  ]
-}
-```
-
-After changing an extension, reload the Pi session; in pi-web, use its extension reload action or restart the development server.
-
-## Checks
+## 开发与验证
 
 ```bash
+npm ci
 npm run check
 npm run test:citations:pi
-npm run pack:all
 ```
 
-## Release one package
+开发依赖集中在根 workspace，Pi SDK 固定在 1.0.2，不打入发布包。根目录是开发 workspace；聚合加载应使用下述 `dist/package`。
 
-1. Update that package's `version`.
-2. Commit and push.
-3. Create and push a tag in this form:
+## 打包
 
 ```bash
-git tag extensions/pi-web-search/v0.1.5
-git push origin extensions/pi-web-search/v0.1.5
+npm run pack
+npm run verify:package -- dist/weclio-plugins-0.1.0.tgz
 ```
 
-The GitHub workflow derives the package directory from the tag and verifies its version before publishing with npm Trusted Publishing. Replace `pi-web-search` with the relevant extension directory.
+- `dist/package/`：4 个 extensions 的完整目录。
+- `dist/weclio-plugins-<version>.tgz`：仅含 harness 的交付文件。
+
+验证器在隔离目录中检查包内容、许可证、扩展加载及离线安装和更新，不修改本机配置。
+
+```bash
+pi -e ./dist/package
+```
+
+## 发布
+
+1. 更新 `bundle/package.json` 中的聚合包版本。
+2. 检查、打包、验证后提交并推送。
+3. 推送匹配的 `v<version>` tag，例如 `v0.1.0`。
+
+`.github/workflows/publish.yml` 构建并验证 tarball，再通过 Trusted Publishing 发布并生成 provenance。不要本地运行 `npm publish`。
+
+新包首次发布需要配置发布授权／Trusted Publisher（仓库 `ivanjinme/weclio-plugins`，workflow `publish.yml`）。

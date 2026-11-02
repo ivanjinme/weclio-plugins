@@ -3,6 +3,7 @@
   "version": "0.1.5",
   "description": "Pi extension that enables native web search for supported OpenAI APIs.",
   "type": "module",
+  "license": "MIT",
   "engines": {
     "node": ">=22.19.0"
   },

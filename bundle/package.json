@@ -1,0 +1,28 @@
+{
+  "name": "@weclio/plugins",
+  "version": "0.1.0",
+  "description": "Weclio Pi harness extensions.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22.19.0" },
+  "keywords": ["pi-package"],
+  "files": ["extensions", "README.md", "LICENSE"],
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": ">=1.0.2",
+    "typebox": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions/pi-web-search/index.ts",
+      "./extensions/pi-submarine/src/index.ts",
+      "./extensions/pi-citations/index.ts",
+      "./extensions/pi-persona/index.ts"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivanjinme/weclio-plugins.git"
+  },
+  "publishConfig": { "access": "public" }
+}
