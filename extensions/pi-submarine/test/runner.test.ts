@@ -679,10 +679,10 @@ describe("subagent runner", () => {
     await writeManifestRecord(parentSession, startedManifestRecord({ sessionId: "header-only-resume-session", cwd, sessionFile: childSession }));
     const { deps } = fakeDeps(root);
     deps.createEpisodeId = vi.fn(() => "resume-1");
-    deps.createAgentSession = vi.fn(async (options: { sessionManager: SessionManager }) => ({
+    deps.createAgentSession = vi.fn(async (options: CreateAgentSessionOptions) => ({
       session: new FakeChildSession({
         promptImpl: async (text) => {
-          options.sessionManager.appendMessage({ role: "user", content: [{ type: "text", text }], timestamp: Date.now() } as Parameters<SessionManager["appendMessage"]>[0]);
+          options.sessionManager!.appendMessage({ role: "user", content: [{ type: "text", text }], timestamp: Date.now() } as Parameters<SessionManager["appendMessage"]>[0]);
           throw new Error("resume model failed before assistant");
         },
       }) as unknown as AgentSession,
@@ -1683,11 +1683,11 @@ describe("subagent runner", () => {
 
     const resumed = fakeDeps(root);
     resumed.deps.createEpisodeId = vi.fn(() => "resume-1");
-    resumed.deps.createAgentSession = vi.fn(async (options: { sessionManager: SessionManager }) => ({
+    resumed.deps.createAgentSession = vi.fn(async (options: CreateAgentSessionOptions) => ({
       session: new FakeChildSession({
         promptImpl: async (text) => {
-          options.sessionManager.appendMessage({ role: "user", content: [{ type: "text", text }], timestamp: Date.now() } as Parameters<SessionManager["appendMessage"]>[0]);
-          options.sessionManager.appendMessage({ role: "assistant", content: [{ type: "text", text: "child answer" }], stopReason: "stop", timestamp: Date.now() } as Parameters<SessionManager["appendMessage"]>[0]);
+          options.sessionManager!.appendMessage({ role: "user", content: [{ type: "text", text }], timestamp: Date.now() } as Parameters<SessionManager["appendMessage"]>[0]);
+          options.sessionManager!.appendMessage({ role: "assistant", content: [{ type: "text", text: "child answer" }], stopReason: "stop", timestamp: Date.now() } as Parameters<SessionManager["appendMessage"]>[0]);
         },
       }) as unknown as AgentSession,
     }));
@@ -1711,8 +1711,8 @@ describe("subagent runner", () => {
     const parentSession = path.join(root, "sessions", "parent.jsonl");
     const inheritedModel = fakeModel("zai", "glm-5v-turbo");
     const { deps } = fakeDeps(root);
-    deps.createAgentSession = vi.fn(async (options: { sessionManager: SessionManager }) => {
-      options.sessionManager.appendModelChange("openai", "gpt-5");
+    deps.createAgentSession = vi.fn(async (options: CreateAgentSessionOptions) => {
+      options.sessionManager!.appendModelChange("openai", "gpt-5");
       return {
         session: new FakeChildSession({
           promptImpl: async () => { throw new Error("failed after model switch"); },

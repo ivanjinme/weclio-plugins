@@ -34,7 +34,8 @@ describe("package metadata", () => {
       typebox: "*",
     });
     const workspace = JSON.parse(await readFile(new URL("../../../package.json", import.meta.url), "utf8"));
-    expect(workspace.devDependencies["@earendil-works/pi-coding-agent"]).toBe("1.0.2");
+    expect(workspace.devDependencies["@earendil-works/pi-coding-agent"]).toMatch(/^\^\d+\.\d+\.\d+$/);
+    expect(workspace.overrides).toBeUndefined();
     expect(packageJson.devDependencies).toBeUndefined();
     expect(packageJson.dependencies ?? {}).toEqual({});
   });

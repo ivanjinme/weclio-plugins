@@ -29,7 +29,7 @@ npm run check
 npm run test:citations:pi
 ```
 
-开发依赖集中在根 workspace，Pi SDK 固定在 1.0.2，不打入发布包。根目录是开发 workspace；聚合加载应使用下述 `dist/package`。
+开发依赖集中在根 workspace，Pi SDK 从 1.4.0 起使用 `^` 范围，不打入发布包；`package-lock.json` 保证 CI 安装可复现。typebox 与 Pi SDK 的精确依赖保持一致，避免重复版本导致类型冲突。根目录是开发 workspace；聚合加载应使用下述 `dist/package`。
 
 ## 打包
 

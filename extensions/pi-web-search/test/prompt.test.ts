@@ -11,12 +11,12 @@ function promptHook(api: Api = "openai-responses") {
     },
   } as unknown as ExtensionAPI);
   const options: NormalizedBuildSystemPromptOptions = {
-    cwd: process.cwd(), selectedTools: [], toolSnippets: {}, toolGuidelines: {},
+    cwd: process.cwd(), selectedTools: [], hiddenTools: [], toolSnippets: {}, toolGuidelines: {},
     promptGuidelines: [], appendSystemPrompt: "", contextFiles: [], skills: [],
     sections: { other_extension: "Other rules" },
   };
   const event: BeforeAgentStartEvent = {
-    type: "before_agent_start", prompt: "Test", systemPromptOptions: options,
+    type: "before_agent_start", messageType: "user", prompt: "Test", systemPromptOptions: options,
     get systemPrompt(): string { throw new Error("Must not read or replace the complete prompt"); },
   };
   const ctx = { model: { api } } as unknown as ExtensionContext;
